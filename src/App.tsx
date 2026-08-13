@@ -7,6 +7,7 @@ import { ResultPage } from "./components/ResultPage";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { OptionSelector } from "./components/OptionSelector";
 import { useImageUpload } from "./hooks/useImageUpload";
+import { useSaasIntegration } from "./hooks/useSaasIntegration";
 import {
   type MultiViewGenerationConfig,
   useMultiViewGeneration,
@@ -30,7 +31,16 @@ function AppInner() {
   // Reference image remains optional and is analyzed into transferable style
   // metadata before the main room is generated.
   const refUpload = useImageUpload(768);
-  const generation = useMultiViewGeneration();
+  const saas = useSaasIntegration();
+  const generationPlatform = useMemo(
+    () => ({
+      verifyGeneration: saas.verifyGeneration,
+      consumeGeneration: saas.consumeGeneration,
+      uploadResult: saas.uploadResult,
+    }),
+    [saas.consumeGeneration, saas.uploadResult, saas.verifyGeneration]
+  );
+  const generation = useMultiViewGeneration(generationPlatform);
 
   const [hasApiKey, setHasApiKey] = useState<boolean | null>(null);
   const [view, setView] = useState<AppView>("editor");
@@ -61,12 +71,28 @@ function AppInner() {
     return {
       primary: primaryView,
       referenceImage: refUpload.image || undefined,
-      requirements: requirements.trim(),
+      requirements: [
+        saas.context ? `主站任务背景：${saas.context}` : "",
+        saas.prompt.length
+          ? `主站补充要求：${saas.prompt.join("、")}`
+          : "",
+        requirements.trim(),
+      ]
+        .filter(Boolean)
+        .join("\n"),
       roomType: "auto",
       designStyle,
       renovationIntensity,
     };
-  }, [designStyle, primaryView, refUpload.image, renovationIntensity, requirements]);
+  }, [
+    designStyle,
+    primaryView,
+    refUpload.image,
+    renovationIntensity,
+    requirements,
+    saas.context,
+    saas.prompt,
+  ]);
 
   const handleGenerate = async () => {
     if (!generationConfig) return;
@@ -96,7 +122,11 @@ function AppInner() {
 
   return (
     <div className="desktop-app-shell light-app flex min-h-screen flex-col bg-[#f4f2eb] font-sans text-stone-950">
-      <Header />
+      <Header
+        integral={saas.integral}
+        integralLoading={saas.loading}
+        userName={saas.userName}
+      />
 
       {view === "result" && generationConfig && generation.views[0]?.resultImage ? (
         <ResultPage
@@ -268,6 +298,15 @@ function AppInner() {
                   <button onClick={generation.clearError} className="text-[10px] text-red-600">
                     关闭
                   </button>
+                </div>
+              )}
+
+              {saas.error && !generation.error && (
+                <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+                  <p className="flex-1 text-[11px] leading-relaxed text-red-700">
+                    {saas.error}
+                  </p>
                 </div>
               )}
 

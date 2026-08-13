@@ -5,7 +5,7 @@ test("primary generation keeps the original structure-preserving prompt policy",
   process.env.NODE_ENV = "production";
   process.env.VERCEL = "true";
 
-  const serverModule = await import("../../server");
+  const serverModule = await import("../../api/server");
   const buildPrompt = (serverModule as unknown as {
     buildPrompt?: (options: Record<string, unknown>) => string;
   }).buildPrompt;

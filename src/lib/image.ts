@@ -66,6 +66,16 @@ export function resizeImage(
   });
 }
 
+export async function prepareImageForApi(
+  dataUrl: string,
+  maxSize = 1400
+): Promise<string> {
+  const base64Length = dataUrl.split(",", 2)[1]?.length || dataUrl.length;
+  const estimatedBytes = Math.ceil((base64Length * 3) / 4);
+  if (estimatedBytes <= 1_200_000) return dataUrl;
+  return (await resizeImage(dataUrl, maxSize)).data;
+}
+
 /**
  * Detect the closest supported aspect ratio from pixel dimensions.
  */

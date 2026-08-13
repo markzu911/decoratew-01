@@ -15,11 +15,19 @@ async function readJsonResponse<T>(res: Response): Promise<T> {
   }
 }
 
+const PRODUCTION_TOOL_ORIGIN = (
+  import.meta.env.VITE_TOOL_API_ORIGIN || "https://decoratew-01.vercel.app"
+).replace(/\/$/, "");
+
+export function toolApiUrl(path: string): string {
+  return import.meta.env.DEV ? path : `${PRODUCTION_TOOL_ORIGIN}${path}`;
+}
+
 /**
  * Call the backend /api/generate endpoint to transform a raw room image.
  */
 export async function generateRoom(req: GenerateRequest): Promise<GenerateResponse> {
-  const res = await fetch("/api/generate", {
+  const res = await fetch(toolApiUrl("/api/generate"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(req),
@@ -30,7 +38,7 @@ export async function generateRoom(req: GenerateRequest): Promise<GenerateRespon
 export async function analyzeMasterDesign(
   req: AnalyzeMasterRequest
 ): Promise<AnalyzeMasterResponse> {
-  const res = await fetch("/api/analyze-master", {
+  const res = await fetch(toolApiUrl("/api/analyze-master"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(req),
@@ -42,6 +50,6 @@ export async function analyzeMasterDesign(
  * Check backend health / API key configuration status.
  */
 export async function checkHealth(): Promise<HealthResponse> {
-  const res = await fetch("/api/health");
+  const res = await fetch(toolApiUrl("/api/health"));
   return readJsonResponse<HealthResponse>(res);
 }

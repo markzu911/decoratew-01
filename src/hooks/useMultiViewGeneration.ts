@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { analyzeMasterDesign, generateRoom } from "../lib/api";
-import { resizeImage } from "../lib/image";
+import { prepareImageForApi, resizeImage } from "../lib/image";
+import { executeBillableGeneration } from "../lib/saas";
 import type {
   DesignStyle,
   GeneratedRoomView,
@@ -19,6 +20,12 @@ export interface MultiViewGenerationConfig {
   roomType: RoomType;
   designStyle: DesignStyle;
   renovationIntensity: RenovationIntensity;
+}
+
+export interface GenerationPlatformServices {
+  verifyGeneration: () => Promise<void>;
+  consumeGeneration: () => Promise<void>;
+  uploadResult: (dataUrl: string, fileName?: string) => Promise<void>;
 }
 
 interface MasterCache {
@@ -63,7 +70,9 @@ function directionalViewLabel(direction: ViewDirection): string {
   return direction === "left" ? "查看左侧" : "查看右侧";
 }
 
-export function useMultiViewGeneration(): UseMultiViewGenerationResult {
+export function useMultiViewGeneration(
+  platform: GenerationPlatformServices
+): UseMultiViewGenerationResult {
   const [views, setViews] = useState<GeneratedRoomView[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [masterConfirmed, setMasterConfirmed] = useState(false);
@@ -109,6 +118,48 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
     masterCacheRef.current = null;
   }, []);
 
+  const generateBillable = useCallback(
+    async (
+      requestOrFactory:
+        | Parameters<typeof generateRoom>[0]
+        | (() => Promise<Parameters<typeof generateRoom>[0]>)
+    ) => {
+      return executeBillableGeneration(
+        {
+          verify: platform.verifyGeneration,
+          consume: platform.consumeGeneration,
+        },
+        async () => {
+          const request =
+            typeof requestOrFactory === "function"
+              ? await requestOrFactory()
+              : requestOrFactory;
+          const [rawImage, referenceImage, editImage, masterImage] =
+            await Promise.all([
+              prepareImageForApi(request.rawImage),
+              request.referenceImage
+                ? prepareImageForApi(request.referenceImage)
+                : undefined,
+              request.editImage
+                ? prepareImageForApi(request.editImage)
+                : undefined,
+              request.masterImage
+                ? prepareImageForApi(request.masterImage)
+                : undefined,
+            ]);
+          return generateRoom({
+            ...request,
+            rawImage,
+            referenceImage,
+            editImage,
+            masterImage,
+          });
+        }
+      );
+    },
+    [platform]
+  );
+
   const getMasterCache = useCallback(
     async (primaryResult: string, roomType: RoomType): Promise<MasterCache> => {
       if (masterCacheRef.current) return masterCacheRef.current;
@@ -153,7 +204,7 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
       replaceViews([primary]);
 
       try {
-        const response = await generateRoom({
+        const response = await generateBillable({
           rawImage: config.primary.image,
           referenceImage: config.referenceImage,
           generationMode: mode,
@@ -190,7 +241,7 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
         endRequest();
       }
     },
-    [beginRequest, endRequest, invalidateMaster, replaceViews, updateView]
+    [beginRequest, endRequest, generateBillable, invalidateMaster, replaceViews, updateView]
   );
 
   const generateInitial = useCallback(
@@ -217,7 +268,7 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
       replaceViews([{ ...primary, status: "generating", error: undefined }]);
 
       try {
-        const response = await generateRoom({
+        const response = await generateBillable({
           rawImage: config.primary.image,
           editImage: primary.resultImage,
           generationMode: "refine",
@@ -249,17 +300,33 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
         endRequest();
       }
     },
-    [beginRequest, endRequest, invalidateMaster, replaceViews, updateView]
+    [beginRequest, endRequest, generateBillable, invalidateMaster, replaceViews, updateView]
   );
 
   const confirmMaster = useCallback(
     async (_config: MultiViewGenerationConfig): Promise<boolean> => {
       const primary = viewsRef.current[0];
       if (!primary?.resultImage) return false;
-      setMasterConfirmed(true);
-      return true;
+      if (!beginRequest("正在保存主方案到“我的图片”...")) return false;
+      try {
+        await platform.uploadResult(
+          primary.resultImage,
+          `renovation-primary-${Date.now()}.jpg`
+        );
+        setMasterConfirmed(true);
+        return true;
+      } catch (uploadError) {
+        setError(
+          uploadError instanceof Error
+            ? uploadError.message
+            : "主方案保存到“我的图片”失败，请重试。"
+        );
+        return false;
+      } finally {
+        endRequest();
+      }
     },
-    []
+    [beginRequest, endRequest, platform]
   );
 
   const generateDirectionalView = useCallback(
@@ -290,7 +357,7 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
 
       try {
         setLoadingMessage(`正在生成${nextView.label}...`);
-        const response = await generateRoom({
+        const response = await generateBillable({
           rawImage: primary.resultImage,
           generationMode: "directional-view",
           viewDirection: direction,
@@ -312,6 +379,18 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
           resultImage: response.image,
           error: undefined,
         });
+        try {
+          await platform.uploadResult(
+            response.image,
+            `renovation-${direction}-${Date.now()}.jpg`
+          );
+        } catch (uploadError) {
+          setError(
+            uploadError instanceof Error
+              ? `画面已生成并扣费，但保存到“我的图片”失败：${uploadError.message}`
+              : "画面已生成并扣费，但保存到“我的图片”失败。"
+          );
+        }
         return true;
       } catch (requestError) {
         const message =
@@ -323,7 +402,7 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
         endRequest();
       }
     },
-    [beginRequest, endRequest, masterConfirmed, replaceViews, updateView]
+    [beginRequest, endRequest, generateBillable, masterConfirmed, platform, replaceViews, updateView]
   );
 
   const refineView = useCallback(
@@ -341,17 +420,19 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
       updateView(viewId, { status: "generating", error: undefined });
 
       try {
-        const master = await getMasterCache(primary.resultImage, config.roomType);
-        const response = await generateRoom({
-          rawImage: view.resultImage,
-          masterImage: master.image,
-          masterDesignProfile: master.profile,
-          generationMode: "refine-view",
-          editInstructions: feedback.trim(),
-          aspectRatio: view.aspectRatio,
-          roomType: config.roomType,
-          designStyle: config.designStyle,
-          renovationIntensity: config.renovationIntensity,
+        const response = await generateBillable(async () => {
+          const master = await getMasterCache(primary.resultImage!, config.roomType);
+          return {
+            rawImage: view.resultImage!,
+            masterImage: master.image,
+            masterDesignProfile: master.profile,
+            generationMode: "refine-view" as const,
+            editInstructions: feedback.trim(),
+            aspectRatio: view.aspectRatio,
+            roomType: config.roomType,
+            designStyle: config.designStyle,
+            renovationIntensity: config.renovationIntensity,
+          };
         });
         if (!response.success || !response.image) {
           const message = response.error || `${view.label}调整失败`;
@@ -375,7 +456,7 @@ export function useMultiViewGeneration(): UseMultiViewGenerationResult {
         endRequest();
       }
     },
-    [beginRequest, endRequest, getMasterCache, updateView]
+    [beginRequest, endRequest, generateBillable, getMasterCache, updateView]
   );
 
   const clear = useCallback(() => {
