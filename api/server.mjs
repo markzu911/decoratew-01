@@ -124,6 +124,28 @@ function directionalViewValidationPassed(validation) {
   return validation.requestedDirectionMatched && validation.newDirectionalAreaDominates && validation.masterSceneStillRecognizable && validation.designIdentityConsistent && validation.architecturePlausible && !validation.nearDuplicate;
 }
 
+// api/lib/streamingResponse.ts
+var DEFAULT_STREAM_CHUNK_SIZE = 64 * 1024;
+async function writeChunk(response, chunk) {
+  if (response.write(chunk)) return;
+  await new Promise((resolve) => response.once("drain", resolve));
+}
+async function streamGeneratedImageResponse(response, mimeType, base64Data, chunkSize = DEFAULT_STREAM_CHUNK_SIZE) {
+  response.setHeader("Content-Type", "application/json; charset=utf-8");
+  response.setHeader("Cache-Control", "no-store");
+  response.setHeader("X-Accel-Buffering", "no");
+  response.flushHeaders?.();
+  await writeChunk(
+    response,
+    `{"success":true,"image":"data:${mimeType};base64,`
+  );
+  for (let offset = 0; offset < base64Data.length; offset += chunkSize) {
+    await writeChunk(response, base64Data.slice(offset, offset + chunkSize));
+    await new Promise((resolve) => setImmediate(resolve));
+  }
+  response.end('"}');
+}
+
 // api/server.ts
 dotenv.config({ path: ".env.local" });
 var app = express();
@@ -1253,7 +1275,8 @@ app.get("/api/health", (_req, res) => {
   res.json({
     status: "ok",
     geminiConfigured: !!GEMINI_API_KEY,
-    structureValidationEnabled: STRUCTURE_VALIDATION_ENABLED
+    structureValidationEnabled: STRUCTURE_VALIDATION_ENABLED,
+    streamingImageResponseEnabled: true
   });
 });
 app.post("/api/analyze-master", async (req, res) => {
@@ -1596,7 +1619,6 @@ app.post("/api/generate", async (req, res) => {
     }
     if (imageOutput && imageOutput.data) {
       const mimeType = imageOutput.mime_type || "image/jpeg";
-      const dataUrl = `data:${mimeType};base64,${imageOutput.data}`;
       const shouldValidateStructure = STRUCTURE_VALIDATION_ENABLED && generationMode !== "camera-view" && generationMode !== "directional-view";
       if (shouldValidateStructure) {
         console.log(`[generate] Validating structure with ${STRUCTURE_VALIDATION_MODEL}`);
@@ -1623,7 +1645,7 @@ app.post("/api/generate", async (req, res) => {
       } else {
         console.log("[generate] Structure validation disabled, returning candidate");
       }
-      res.json({ success: true, image: dataUrl });
+      await streamGeneratedImageResponse(res, mimeType, imageOutput.data);
       return;
     }
     const errorMsg = interaction.output_text || "AI \u672A\u80FD\u751F\u6210\u56FE\u7247\uFF0C\u8BF7\u91CD\u8BD5\u3002";

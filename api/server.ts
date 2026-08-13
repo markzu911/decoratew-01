@@ -18,6 +18,7 @@ import {
   directionalViewValidationPassed,
   type DirectionalViewValidation,
 } from "./lib/directionalView";
+import { streamGeneratedImageResponse } from "./lib/streamingResponse";
 import type {
   DesignStyle,
   GenerationMode,
@@ -1498,6 +1499,7 @@ app.get("/api/health", (_req, res) => {
     status: "ok",
     geminiConfigured: !!GEMINI_API_KEY,
     structureValidationEnabled: STRUCTURE_VALIDATION_ENABLED,
+    streamingImageResponseEnabled: true,
   });
 });
 
@@ -1919,8 +1921,6 @@ app.post("/api/generate", async (req, res) => {
 
     if (imageOutput && imageOutput.data) {
       const mimeType = imageOutput.mime_type || "image/jpeg";
-      const dataUrl = `data:${mimeType};base64,${imageOutput.data}`;
-
       const shouldValidateStructure =
         STRUCTURE_VALIDATION_ENABLED &&
         generationMode !== "camera-view" &&
@@ -1957,7 +1957,7 @@ app.post("/api/generate", async (req, res) => {
         console.log("[generate] Structure validation disabled, returning candidate");
       }
 
-      res.json({ success: true, image: dataUrl });
+      await streamGeneratedImageResponse(res, mimeType, imageOutput.data);
       return;
     }
 
