@@ -15,8 +15,15 @@ async function readJsonResponse<T>(res: Response): Promise<T> {
   }
 }
 
+// The main-site tool proxy rewrites literal deployment origins inside JavaScript
+// responses to "/". Keep the default URL encoded so it is resolved by the
+// browser at runtime and AI requests can bypass the proxy's body-size limit.
+const DEFAULT_PRODUCTION_TOOL_ORIGIN = decodeURIComponent(
+  "https%3A%2F%2Fdecoratew-01.vercel.app"
+);
+
 const PRODUCTION_TOOL_ORIGIN = (
-  import.meta.env.VITE_TOOL_API_ORIGIN || "https://decoratew-01.vercel.app"
+  import.meta.env.VITE_TOOL_API_ORIGIN || DEFAULT_PRODUCTION_TOOL_ORIGIN
 ).replace(/\/$/, "");
 
 export function toolApiUrl(path: string): string {
