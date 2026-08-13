@@ -1,0 +1,15 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+.workbuddy/
+
+# Local Vercel bundle build tests
+.vercel-test-bundle.js
+.wb-vercel-test*.js
+tmp/
+test-write-check.txt
