@@ -23,25 +23,25 @@ export function AdditionalViews({
   const canAdd = views.length < MAX_ADDITIONAL_VIEWS && !disabled;
 
   return (
-    <section className="desktop-additional-views rounded-2xl border border-zinc-800 bg-zinc-900/55 p-3">
+    <section className="desktop-additional-views rounded-2xl border border-stone-200 bg-white p-3">
       <div className="mb-2.5 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
           <Camera className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
-          <p className="truncate text-[11px] font-semibold text-zinc-300">
+          <p className="truncate text-[11px] font-semibold text-stone-700">
             其他毛坯视角
           </p>
-          <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[9px] text-zinc-500">
+          <span className="rounded bg-stone-100 px-1.5 py-0.5 text-[9px] text-stone-500">
             可选 · 最多3张
           </span>
         </div>
-        <span className="text-[9px] text-zinc-600">主视角驱动一致设计</span>
+        <span className="text-[9px] text-stone-400">主视角驱动一致设计</span>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-0.5">
         {views.map((view, index) => (
           <div
             key={view.id}
-            className="group relative h-[74px] w-[112px] shrink-0 overflow-hidden rounded-xl border border-zinc-700 bg-zinc-950"
+            className="group relative h-[74px] w-[112px] shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-stone-100"
           >
             <img
               src={view.image}
@@ -65,7 +65,7 @@ export function AdditionalViews({
         ))}
 
         {canAdd && (
-          <label className="flex h-[74px] w-[112px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-zinc-700 bg-zinc-950/55 text-zinc-500 transition hover:border-zinc-500 hover:bg-zinc-900 hover:text-zinc-300">
+          <label className="flex h-[74px] w-[112px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-stone-300 bg-stone-50 text-stone-500 transition hover:border-lime-500 hover:bg-lime-50 hover:text-stone-800">
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
@@ -89,7 +89,7 @@ export function AdditionalViews({
         )}
       </div>
 
-      {error && <p className="mt-2 text-[10px] text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-[10px] text-red-600">{error}</p>}
     </section>
   );
 }

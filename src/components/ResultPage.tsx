@@ -142,10 +142,10 @@ export function ResultPage({
 
   return (
     <main className="desktop-result-page mx-auto w-full max-w-[1500px] flex-1 px-4 pb-6 sm:px-6">
-      <div className="desktop-result-frame flex h-full min-h-[720px] flex-col overflow-hidden rounded-[28px] border border-zinc-800/90 bg-[#101211] shadow-2xl shadow-black/40">
-        <header className="flex flex-col gap-4 border-b border-zinc-800 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div className="desktop-result-frame flex h-full min-h-[720px] flex-col overflow-hidden rounded-[28px] border border-stone-200 bg-white shadow-[0_24px_70px_rgba(47,43,35,0.1)]">
+        <header className="flex flex-col gap-4 border-b border-stone-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[#d9ff57]/20 bg-[#d9ff57]/10 text-[#d9ff57]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-lime-300 bg-lime-50 text-lime-700">
               {isGenerating ? (
                 <LoaderCircle className="h-5 w-5 animate-spin" />
               ) : (
@@ -154,21 +154,21 @@ export function ResultPage({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-base font-semibold tracking-tight text-zinc-100 sm:text-lg">
+                <h1 className="text-base font-semibold tracking-tight text-stone-950 sm:text-lg">
                   空间设计工作台
                 </h1>
                 <span
                   className={cn(
                     "rounded-full px-2 py-0.5 text-[9px] font-semibold",
                     masterConfirmed
-                      ? "bg-emerald-400/10 text-emerald-300"
-                      : "bg-amber-400/10 text-amber-300"
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-amber-50 text-amber-700"
                   )}
                 >
                   {masterConfirmed ? "主方案已确认" : "等待确认主方案"}
                 </span>
               </div>
-              <p className="mt-0.5 text-[10px] text-zinc-500">
+              <p className="mt-0.5 text-[10px] text-stone-500">
                 {views.length === 1 ? "先调整并确认第一张结果" : `已生成 ${views.length - 1} 个新视角`}
               </p>
             </div>
@@ -179,7 +179,7 @@ export function ResultPage({
               type="button"
               onClick={onBackToEditor}
               disabled={isGenerating}
-              className="flex h-9 items-center gap-2 rounded-xl border border-zinc-800 px-3 text-[11px] font-semibold text-zinc-400 transition hover:bg-zinc-900 hover:text-white disabled:cursor-wait"
+              className="flex h-9 items-center gap-2 rounded-xl border border-stone-200 bg-white px-3 text-[11px] font-semibold text-stone-600 transition hover:border-stone-300 hover:bg-stone-50 hover:text-stone-950 disabled:cursor-wait"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               返回需求
@@ -188,7 +188,7 @@ export function ResultPage({
               type="button"
               onClick={handleDownload}
               disabled={!activeView.resultImage}
-              className="flex h-9 items-center gap-2 rounded-xl bg-zinc-100 px-3 text-[11px] font-semibold text-zinc-950 transition hover:bg-white disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-600"
+              className="flex h-9 items-center gap-2 rounded-xl bg-stone-900 px-3 text-[11px] font-semibold text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-400"
             >
               <Download className="h-3.5 w-3.5" />
               下载
@@ -197,18 +197,18 @@ export function ResultPage({
         </header>
 
         {generationError && (
-          <div className="mx-4 mt-3 flex items-center gap-3 rounded-xl border border-red-900/50 bg-red-950/35 px-4 py-2.5 text-xs text-red-300 sm:mx-6">
+          <div className="mx-4 mt-3 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-xs text-red-700 sm:mx-6">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span className="flex-1">{generationError}</span>
-            <button onClick={onDismissError} className="font-semibold text-red-400">
+            <button onClick={onDismissError} className="font-semibold text-red-600">
               关闭
             </button>
           </div>
         )}
 
-        <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_340px]">
-          <section className="flex min-h-0 min-w-0 flex-col border-b border-zinc-800 lg:border-r lg:border-b-0">
-            <div className="flex items-center gap-2 overflow-x-auto border-b border-zinc-800 px-4 py-3 sm:px-6">
+        <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_380px]">
+          <section className="flex min-h-0 min-w-0 flex-col border-b border-stone-200 lg:border-r lg:border-b-0">
+            <div className="flex items-center gap-2 overflow-x-auto border-b border-stone-200 px-4 py-3 sm:px-6">
               {views.map((item, index) => (
                 <button
                   key={item.id}
@@ -221,11 +221,11 @@ export function ResultPage({
                   className={cn(
                     "group flex shrink-0 items-center gap-2 rounded-xl border px-2 py-1.5 text-left transition",
                     item.id === activeView.id
-                      ? "border-zinc-600 bg-zinc-800 text-white"
-                      : "border-transparent bg-zinc-900/60 text-zinc-500 hover:border-zinc-800 hover:text-zinc-200"
+                      ? "border-stone-300 bg-stone-100 text-stone-950"
+                      : "border-transparent bg-stone-50 text-stone-500 hover:border-stone-200 hover:text-stone-800"
                   )}
                 >
-                  <span className="relative h-9 w-12 overflow-hidden rounded-lg bg-black">
+                  <span className="relative h-9 w-12 overflow-hidden rounded-lg bg-stone-200">
                     <img
                       src={item.resultImage || item.image}
                       alt={item.label}
@@ -245,10 +245,10 @@ export function ResultPage({
                       className={cn(
                         "block text-[8px]",
                         item.status === "complete"
-                          ? "text-emerald-400"
+                          ? "text-emerald-700"
                           : item.status === "error"
-                            ? "text-red-400"
-                            : "text-zinc-600"
+                            ? "text-red-600"
+                            : "text-stone-400"
                       )}
                     >
                       {item.status === "complete"
@@ -262,7 +262,7 @@ export function ResultPage({
               ))}
             </div>
 
-            <div className="flex items-center gap-1 border-b border-zinc-800 px-4 py-2 sm:px-6">
+            <div className="flex items-center gap-1 border-b border-stone-200 bg-[#fbfaf6] px-4 py-2 sm:px-6">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
@@ -271,8 +271,8 @@ export function ResultPage({
                   className={cn(
                     "rounded-lg px-3 py-1.5 text-[10px] font-semibold transition",
                     activeTab === tab.id
-                      ? "bg-zinc-100 text-zinc-950"
-                      : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-200"
+                      ? "bg-stone-900 text-white"
+                      : "text-stone-500 hover:bg-stone-100 hover:text-stone-900"
                   )}
                 >
                   {tab.label}
@@ -280,18 +280,18 @@ export function ResultPage({
               ))}
             </div>
 
-            <div className="desktop-result-image relative flex min-h-[430px] flex-1 items-center justify-center bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.035),transparent_58%)] p-4 sm:p-6">
+            <div className="desktop-result-image relative flex min-h-[430px] flex-1 items-center justify-center bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.92),rgba(241,239,231,0.82)_65%)] p-4 sm:p-6">
               {currentImage ? (
                 <button
                   type="button"
                   onClick={() => !activeIsGenerating && setPreviewTab(activeTab)}
                   disabled={activeIsGenerating}
-                  className="group relative flex h-full w-full cursor-zoom-in items-center justify-center overflow-hidden rounded-2xl bg-black/25 p-3 outline-none ring-[#d9ff57]/30 focus-visible:ring-2 disabled:cursor-wait"
+                  className="group relative flex h-full w-full cursor-zoom-in items-center justify-center overflow-hidden rounded-2xl border border-stone-200 bg-white/70 p-3 outline-none ring-lime-400/40 focus-visible:ring-2 disabled:cursor-wait"
                 >
                   <img
                     src={currentImage}
                     alt={tabs.find((tab) => tab.id === activeTab)?.label}
-                    className="max-h-[70vh] max-w-full object-contain shadow-2xl shadow-black/60 transition duration-500 group-hover:scale-[1.006]"
+                    className="max-h-[70vh] max-w-full object-contain shadow-[0_22px_55px_rgba(47,43,35,0.18)] transition duration-500 group-hover:scale-[1.006]"
                   />
                   {!activeIsGenerating && (
                     <span className="absolute right-4 bottom-4 flex items-center gap-2 rounded-full border border-white/10 bg-black/70 px-3 py-2 text-[9px] font-semibold text-white/80 backdrop-blur-md">
@@ -305,9 +305,9 @@ export function ResultPage({
                   {activeView.status === "error" ? (
                     <AlertCircle className="h-8 w-8 text-red-400" />
                   ) : (
-                    <LoaderCircle className="h-8 w-8 animate-spin text-zinc-500" />
+                    <LoaderCircle className="h-8 w-8 animate-spin text-stone-500" />
                   )}
-                  <p className="mt-3 text-xs font-semibold text-zinc-300">
+                  <p className="mt-3 text-xs font-semibold text-stone-700">
                     {activeView.error || "正在生成当前视角"}
                   </p>
                 </div>
@@ -316,131 +316,135 @@ export function ResultPage({
             </div>
           </section>
 
-          <aside className="custom-scrollbar min-h-0 overflow-y-auto bg-zinc-950/30 p-4 sm:p-5">
-            <section>
-              <div className="mb-3 flex items-center gap-2">
-                <SlidersHorizontal className="h-4 w-4 text-[#d9ff57]" />
-                <div>
-                  <h2 className="text-xs font-semibold text-zinc-200">
-                    {isPrimary ? "调整主方案" : `调整${activeView.label}`}
-                  </h2>
-                  <p className="mt-0.5 text-[9px] text-zinc-600">
-                    只描述本轮需要改变的内容
-                  </p>
-                </div>
-              </div>
-              <textarea
-                value={feedback}
-                onChange={(event) => setFeedback(event.target.value)}
-                maxLength={800}
-                placeholder={isPrimary ? "例如：只把沙发换成浅灰色，其他部分保持不变" : "例如：保持镜头不变，减少这个视角的装饰品"}
-                className="h-24 w-full resize-none rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2.5 text-[11px] leading-relaxed text-zinc-200 outline-none placeholder:text-zinc-700 focus:border-[#d9ff57]/40 focus:ring-2 focus:ring-[#d9ff57]/5"
-              />
-              <button
-                type="button"
-                onClick={() => setFeedback("天花板仍有毛坯或未完成区域。保持天花板高度、边界和结构不变，将所有可见天花板完整处理为与当前方案一致的装修完成面。")}
-                className="mt-2 rounded-lg border border-zinc-800 px-2.5 py-1.5 text-[9px] font-semibold text-zinc-500 transition hover:border-zinc-700 hover:text-zinc-200"
-              >
-                天花板未完成
-              </button>
-              <button
-                type="button"
-                onClick={() => void handleRefine()}
-                disabled={!feedback.trim() || isGenerating}
-                className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-zinc-100 text-[11px] font-semibold text-zinc-950 transition hover:bg-white disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-600"
-              >
-                {isGenerating ? (
-                  <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <RefreshCw className="h-3.5 w-3.5" />
-                )}
-                根据反馈调整
-              </button>
-
-              {isPrimary && (
-                <div className="mt-2 grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => void onRedesignPrimary(feedback.trim() || undefined)}
-                    disabled={isGenerating}
-                    className="flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-800 text-[10px] font-semibold text-zinc-400 transition hover:bg-zinc-900 hover:text-white disabled:cursor-wait"
-                  >
-                    <RotateCcw className="h-3.5 w-3.5" />
-                    重新设计
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void onConfirmMaster()}
-                    disabled={isGenerating || masterConfirmed}
-                    className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-[#d9ff57] text-[10px] font-bold text-zinc-950 transition hover:bg-[#e4ff83] disabled:cursor-default disabled:bg-emerald-400/10 disabled:text-emerald-300"
-                  >
-                    <Check className="h-3.5 w-3.5" />
-                    {masterConfirmed ? "已确认" : "确认主方案"}
-                  </button>
-                </div>
-              )}
-            </section>
-
-            {masterConfirmed && (
-              <section className="mt-5 border-t border-zinc-800 pt-5">
-                <div className="mb-4 flex items-center gap-2">
-                  <Camera className="h-4 w-4 text-[#d9ff57]" />
+          <aside className="flex min-h-0 flex-col overflow-hidden bg-[#f8f7f2]">
+            <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
+              <section>
+                <div className="mb-3 flex items-center gap-2">
+                  <SlidersHorizontal className="h-4 w-4 text-[#c9ef2f]" />
                   <div>
-                    <h2 className="text-xs font-semibold text-zinc-200">查看房间其他方向</h2>
-                    <p className="mt-0.5 text-[9px] text-zinc-600">根据已确认结果，生成以左侧或右侧空间为主体的新画面</p>
+                    <h2 className="text-xs font-semibold text-stone-800">
+                      {isPrimary ? "调整主方案" : `调整${activeView.label}`}
+                    </h2>
+                    <p className="mt-0.5 text-[9px] text-stone-400">
+                      只描述本轮需要改变的内容
+                    </p>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-2 rounded-xl border border-zinc-800 bg-zinc-950/80 p-1.5">
-                  {(["left", "right"] as ViewDirection[]).map((direction) => (
-                    <button
-                      key={direction}
-                      type="button"
-                      onClick={() => setViewDirection(direction)}
-                      className={cn(
-                        "min-h-10 rounded-lg px-3 text-[10px] font-semibold transition",
-                        viewDirection === direction
-                          ? "bg-zinc-100 text-zinc-950 shadow-sm"
-                          : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-200"
-                      )}
-                    >
-                      {direction === "left" ? "查看左侧" : "查看右侧"}
-                    </button>
-                  ))}
-                </div>
-
                 <textarea
-                  value={viewRequirements}
-                  onChange={(event) => setViewRequirements(event.target.value)}
-                  maxLength={500}
-                  placeholder="可选：补充这个视角的要求"
-                  className="mt-3 h-16 w-full resize-none rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2.5 text-[10px] leading-relaxed text-zinc-200 outline-none placeholder:text-zinc-700 focus:border-[#d9ff57]/40"
+                  value={feedback}
+                  onChange={(event) => setFeedback(event.target.value)}
+                  maxLength={800}
+                  placeholder={isPrimary ? "例如：只把沙发换成浅灰色，其他部分保持不变" : "例如：保持镜头不变，减少这个视角的装饰品"}
+                  className="h-24 w-full resize-none rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-[11px] leading-relaxed text-stone-800 outline-none placeholder:text-stone-400 focus:border-lime-500 focus:ring-2 focus:ring-lime-200/70"
                 />
-
                 <button
                   type="button"
-                  onClick={() => void handleDirectionalGeneration()}
-                  disabled={isGenerating}
-                  className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#d9ff57] text-[11px] font-bold text-zinc-950 shadow-[0_10px_30px_rgba(217,255,87,0.1)] transition hover:bg-[#e4ff83] disabled:cursor-wait disabled:bg-zinc-800 disabled:text-zinc-600"
+                  onClick={() => setFeedback("天花板仍有毛坯或未完成区域。保持天花板高度、边界和结构不变，将所有可见天花板完整处理为与当前方案一致的装修完成面。")}
+                  className="mt-2 rounded-lg border border-stone-200 bg-white px-2.5 py-1.5 text-[9px] font-semibold text-stone-500 transition hover:border-stone-300 hover:text-stone-900"
                 >
-                  <Camera className="h-4 w-4" />
-                  生成{viewDirection === "left" ? "左侧" : "右侧"}画面
+                  天花板未完成
                 </button>
-                <p className="mt-2 text-[9px] leading-relaxed text-zinc-600">
-                  保留主方案中的核心空间，同时展示所选侧面的新区域；元素会按新视角自然重排。
-                </p>
-              </section>
-            )}
+                <button
+                  type="button"
+                  onClick={() => void handleRefine()}
+                  disabled={!feedback.trim() || isGenerating}
+                  className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-stone-900 text-[11px] font-semibold text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-400"
+                >
+                  {isGenerating ? (
+                    <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <RefreshCw className="h-3.5 w-3.5" />
+                  )}
+                  根据反馈调整
+                </button>
 
-            <button
-              type="button"
-              onClick={onRestart}
-              disabled={isGenerating}
-              className="mt-5 flex h-9 w-full items-center justify-center gap-2 border-t border-zinc-800 pt-4 text-[10px] text-zinc-600 transition hover:text-zinc-300 disabled:cursor-wait"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              清空并重新开始
-            </button>
+                {isPrimary && (
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => void onRedesignPrimary(feedback.trim() || undefined)}
+                      disabled={isGenerating}
+                      className="flex h-9 items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-white text-[10px] font-semibold text-stone-600 transition hover:border-stone-300 hover:bg-stone-50 hover:text-stone-950 disabled:cursor-wait"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" />
+                      重新设计
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void onConfirmMaster()}
+                      disabled={isGenerating || masterConfirmed}
+                      className="flex h-9 items-center justify-center gap-1.5 rounded-xl bg-[#c9ef2f] text-[10px] font-bold text-[#263000] transition hover:bg-[#d4f55a] disabled:cursor-default disabled:bg-emerald-50 disabled:text-emerald-700"
+                    >
+                      <Check className="h-3.5 w-3.5" />
+                      {masterConfirmed ? "已确认" : "确认主方案"}
+                    </button>
+                  </div>
+                )}
+              </section>
+
+              {masterConfirmed && (
+                <section className="mt-5 border-t border-stone-200 pt-5">
+                  <div className="mb-4 flex items-center gap-2">
+                    <Camera className="h-4 w-4 text-[#c9ef2f]" />
+                    <div>
+                      <h2 className="text-xs font-semibold text-stone-800">查看房间其他方向</h2>
+                      <p className="mt-0.5 text-[9px] text-stone-400">根据已确认结果，生成以左侧或右侧空间为主体的新画面</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 rounded-xl border border-stone-200 bg-white p-1.5">
+                    {(["left", "right"] as ViewDirection[]).map((direction) => (
+                      <button
+                        key={direction}
+                        type="button"
+                        onClick={() => setViewDirection(direction)}
+                        className={cn(
+                          "min-h-10 rounded-lg px-3 text-[10px] font-semibold transition",
+                          viewDirection === direction
+                            ? "bg-stone-900 text-white shadow-sm"
+                            : "text-stone-500 hover:bg-stone-100 hover:text-stone-900"
+                        )}
+                      >
+                        {direction === "left" ? "查看左侧" : "查看右侧"}
+                      </button>
+                    ))}
+                  </div>
+
+                  <textarea
+                    value={viewRequirements}
+                    onChange={(event) => setViewRequirements(event.target.value)}
+                    maxLength={500}
+                    placeholder="可选：补充这个视角的要求"
+                    className="mt-3 h-16 w-full resize-none rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-[10px] leading-relaxed text-stone-800 outline-none placeholder:text-stone-400 focus:border-lime-500"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => void handleDirectionalGeneration()}
+                    disabled={isGenerating}
+                    className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#c9ef2f] text-[11px] font-bold text-[#263000] shadow-[0_10px_30px_rgba(151,181,27,0.15)] transition hover:bg-[#d4f55a] disabled:cursor-wait disabled:bg-stone-200 disabled:text-stone-400"
+                  >
+                    <Camera className="h-4 w-4" />
+                    生成{viewDirection === "left" ? "左侧" : "右侧"}画面
+                  </button>
+                  <p className="mt-2 text-[9px] leading-relaxed text-stone-400">
+                    保留主方案中的核心空间，同时展示所选侧面的新区域；元素会按新视角自然重排。
+                  </p>
+                </section>
+              )}
+            </div>
+
+            <footer className="desktop-result-sidebar-footer shrink-0 border-t border-stone-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-5">
+              <button
+                type="button"
+                onClick={onRestart}
+                disabled={isGenerating}
+                className="flex h-9 w-full items-center justify-center gap-2 rounded-xl text-[10px] text-stone-500 transition hover:bg-stone-100 hover:text-stone-900 disabled:cursor-wait"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                清空并重新开始
+              </button>
+            </footer>
           </aside>
         </div>
       </div>

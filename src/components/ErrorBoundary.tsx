@@ -28,12 +28,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center gap-4 p-8 text-center">
-          <h2 className="text-xl font-bold text-zinc-100">应用出现异常</h2>
-          <p className="text-sm text-zinc-500 max-w-md">{this.state.error}</p>
+        <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#f4f2eb] p-8 text-center">
+          <h2 className="text-xl font-bold text-stone-900">应用出现异常</h2>
+          <p className="max-w-md text-sm text-stone-500">{this.state.error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-6 py-3 bg-white text-zinc-900 rounded-xl font-semibold text-sm hover:bg-zinc-200 transition-colors"
+            className="rounded-xl bg-stone-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-stone-800"
           >
             刷新页面
           </button>

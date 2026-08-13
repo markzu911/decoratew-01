@@ -124,13 +124,13 @@ export function ResultModal({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/85 p-2 backdrop-blur-lg sm:p-5"
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-stone-950/35 p-2 backdrop-blur-lg sm:p-5"
       role="dialog"
       aria-modal="true"
       aria-label="图片完整预览"
     >
-      <div className="flex h-[calc(100vh-1rem)] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-950 shadow-2xl shadow-black sm:h-[calc(100vh-2.5rem)] sm:rounded-3xl">
-        <header className="flex shrink-0 flex-wrap items-center gap-2 border-b border-zinc-800 px-3 py-3 sm:flex-nowrap sm:px-5">
+      <div className="flex h-[calc(100vh-1rem)] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-[0_28px_90px_rgba(47,43,35,0.26)] sm:h-[calc(100vh-2.5rem)] sm:rounded-3xl">
+        <header className="flex shrink-0 flex-wrap items-center gap-2 border-b border-stone-200 px-3 py-3 sm:flex-nowrap sm:px-5">
           <div className="order-2 flex w-full min-w-0 gap-1 overflow-x-auto sm:order-1 sm:w-auto sm:flex-1">
             {tabs.filter((item) => item.show).map((item) => (
               <button
@@ -140,8 +140,8 @@ export function ResultModal({
                 className={cn(
                   "shrink-0 rounded-lg px-3 py-2 text-xs font-semibold transition-colors sm:px-4",
                   tab === item.id
-                    ? "bg-white text-zinc-950"
-                    : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-200"
+                    ? "bg-stone-900 text-white"
+                    : "text-stone-500 hover:bg-stone-100 hover:text-stone-900"
                 )}
               >
                 {item.label}
@@ -149,12 +149,12 @@ export function ResultModal({
             ))}
           </div>
 
-          <div className="order-1 ml-auto flex shrink-0 items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-900 p-1 sm:order-2 sm:ml-0">
+          <div className="order-1 ml-auto flex shrink-0 items-center gap-1 rounded-xl border border-stone-200 bg-stone-50 p-1 sm:order-2 sm:ml-0">
             <button
               type="button"
               onClick={() => setZoom((value) => Math.max(MIN_ZOOM, value - ZOOM_STEP))}
               disabled={zoom <= MIN_ZOOM}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white disabled:cursor-not-allowed disabled:text-zinc-700"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 transition-colors hover:bg-white hover:text-stone-950 disabled:cursor-not-allowed disabled:text-stone-300"
               aria-label="缩小图片"
             >
               <Minus className="h-4 w-4" />
@@ -162,7 +162,7 @@ export function ResultModal({
             <button
               type="button"
               onClick={() => setZoom(MIN_ZOOM)}
-              className="flex h-8 min-w-14 items-center justify-center gap-1 rounded-lg px-2 text-[10px] font-semibold tabular-nums text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+              className="flex h-8 min-w-14 items-center justify-center gap-1 rounded-lg px-2 text-[10px] font-semibold tabular-nums text-stone-500 transition-colors hover:bg-white hover:text-stone-950"
               title="恢复完整显示"
             >
               {Math.round(zoom * 100)}%
@@ -171,7 +171,7 @@ export function ResultModal({
               type="button"
               onClick={() => setZoom((value) => Math.min(MAX_ZOOM, value + ZOOM_STEP))}
               disabled={zoom >= MAX_ZOOM}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white disabled:cursor-not-allowed disabled:text-zinc-700"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 transition-colors hover:bg-white hover:text-stone-950 disabled:cursor-not-allowed disabled:text-stone-300"
               aria-label="放大图片"
             >
               <Plus className="h-4 w-4" />
@@ -181,7 +181,7 @@ export function ResultModal({
           <button
             type="button"
             onClick={onClose}
-            className="order-1 ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 transition-colors hover:border-zinc-700 hover:bg-zinc-800 hover:text-white sm:order-3"
+            className="order-1 ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-500 transition-colors hover:border-stone-300 hover:bg-stone-50 hover:text-stone-950 sm:order-3"
             aria-label="关闭图片预览"
           >
             <X className="h-5 w-5" />
@@ -190,7 +190,7 @@ export function ResultModal({
 
         <div
           ref={stageRef}
-          className="custom-scrollbar relative min-h-0 flex-1 overflow-auto bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.055),transparent_42%)]"
+          className="custom-scrollbar relative min-h-0 flex-1 overflow-auto bg-[radial-gradient(circle_at_center,rgba(255,255,255,1),rgba(238,236,228,0.92)_70%)]"
         >
           <div
             className="flex items-center justify-center p-3 sm:p-8"
@@ -227,7 +227,7 @@ export function ResultModal({
               <img
                 src={currentImage}
                 alt={`${tabs.find((item) => item.id === tab)?.label || "图片"}完整预览`}
-                className="block select-none rounded-lg shadow-2xl shadow-black/70"
+                className="block select-none rounded-lg shadow-[0_24px_65px_rgba(47,43,35,0.24)]"
                 style={
                   fittedSize
                     ? { width: fittedSize.width, height: fittedSize.height, maxWidth: "none" }
@@ -248,7 +248,7 @@ export function ResultModal({
             )}
           </div>
 
-          <div className="pointer-events-none fixed bottom-7 left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-black/65 px-3 py-2 text-[10px] text-zinc-400 backdrop-blur-md sm:flex">
+          <div className="pointer-events-none fixed bottom-7 left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-stone-200 bg-white/85 px-3 py-2 text-[10px] text-stone-500 shadow-lg backdrop-blur-md sm:flex">
             <RotateCcw className="h-3 w-3" />
             双击放大或还原 · Esc 关闭
           </div>

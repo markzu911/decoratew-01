@@ -1,15 +1,27 @@
 @import "tailwindcss";
 
-/* Global dark theme */
+@keyframes video-progress {
+  0% {
+    transform: translateX(-110%);
+  }
+  50% {
+    transform: translateX(130%);
+  }
+  100% {
+    transform: translateX(360%);
+  }
+}
+
+/* Global architectural studio theme */
 html,
 body {
-  background-color: #0a0a0b;
-  color-scheme: dark;
+  background-color: #f4f2eb;
+  color-scheme: light;
 }
 
 /* Custom scrollbar */
 .custom-scrollbar {
-  scrollbar-color: rgba(52, 211, 153, 0.46) rgba(9, 9, 11, 0.72);
+  scrollbar-color: rgba(132, 160, 19, 0.62) rgba(231, 229, 222, 0.84);
   scrollbar-width: thin;
 }
 
@@ -18,7 +30,7 @@ body {
   height: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(9, 9, 11, 0.72);
+  background: rgba(231, 229, 222, 0.84);
   border-radius: 999px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -26,16 +38,16 @@ body {
   border-radius: 999px;
   background: linear-gradient(
       180deg,
-      rgba(52, 211, 153, 0.58),
-      rgba(16, 185, 129, 0.34)
+      rgba(156, 189, 16, 0.76),
+      rgba(132, 160, 19, 0.54)
     )
     padding-box;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(
       180deg,
-      rgba(110, 231, 183, 0.78),
-      rgba(52, 211, 153, 0.52)
+      rgba(172, 210, 21, 0.9),
+      rgba(143, 174, 17, 0.68)
     )
     padding-box;
 }

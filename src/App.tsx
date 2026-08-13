@@ -95,7 +95,7 @@ function AppInner() {
   };
 
   return (
-    <div className="desktop-app-shell flex min-h-screen flex-col bg-[#090a0a] font-sans text-zinc-100">
+    <div className="desktop-app-shell light-app flex min-h-screen flex-col bg-[#f4f2eb] font-sans text-stone-950">
       <Header />
 
       {view === "result" && generationConfig && generation.views[0]?.resultImage ? (
@@ -128,7 +128,7 @@ function AppInner() {
           onRestart={handleRestart}
         />
       ) : (
-        <main className="desktop-editor-page mx-auto w-full max-w-6xl flex-1 px-6 pb-12">
+        <main className="desktop-editor-page mx-auto w-full max-w-[1500px] flex-1 px-4 pb-12 sm:px-6">
           <div className="desktop-editor-grid grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
             <div className="desktop-source-stack custom-scrollbar relative flex min-h-0 flex-col gap-3">
               <ImageUploader
@@ -152,15 +152,15 @@ function AppInner() {
             </div>
 
             <div className="desktop-controls flex flex-col gap-4">
-              <section className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4 shadow-xl shadow-black/10">
+              <section className="rounded-2xl border border-stone-200 bg-white p-4 shadow-[0_18px_45px_rgba(47,43,35,0.06)]">
                 <div className="mb-3 flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold text-zinc-200">装修需求</p>
-                    <p className="mt-1 text-[10px] leading-relaxed text-zinc-500">
+                    <p className="text-xs font-semibold text-stone-900">装修需求</p>
+                    <p className="mt-1 text-[10px] leading-relaxed text-stone-500">
                       描述空间功能、颜色、材质、家具与灯光偏好
                     </p>
                   </div>
-                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2 py-1 text-[9px] font-semibold tracking-wide text-emerald-300">
+                  <span className="rounded-full border border-lime-300 bg-lime-50 px-2 py-1 text-[9px] font-semibold tracking-wide text-lime-800">
                     可迭代
                   </span>
                 </div>
@@ -169,21 +169,21 @@ function AppInner() {
                   onChange={(event) => setRequirements(event.target.value)}
                   maxLength={1200}
                   placeholder="例如：做成温暖的现代客厅，以原木和米白色为主；天花板使用平整暖白完成面，不做复杂吊顶……"
-                  className="h-28 w-full resize-none rounded-xl border border-zinc-800 bg-zinc-950/80 px-3.5 py-3 text-xs leading-relaxed text-zinc-200 outline-none transition placeholder:text-zinc-700 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10"
+                  className="h-28 w-full resize-none rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-3 text-xs leading-relaxed text-stone-800 outline-none transition placeholder:text-stone-400 focus:border-lime-500 focus:bg-white focus:ring-2 focus:ring-lime-200/70"
                 />
-                <div className="mt-2 flex items-center justify-between text-[9px] text-zinc-600">
+                <div className="mt-2 flex items-center justify-between text-[9px] text-stone-400">
                   <span>未填写时，AI 将结合空间智能设计</span>
                   <span>{requirements.length}/1200</span>
                 </div>
               </section>
 
-              <section className="rounded-2xl border border-zinc-800 bg-zinc-900/55 p-3">
+              <section className="rounded-2xl border border-stone-200 bg-white p-3 shadow-[0_12px_32px_rgba(47,43,35,0.04)]">
                 <div className="mb-2 flex items-center justify-between px-1">
                   <div>
-                    <p className="text-[11px] font-semibold text-zinc-300">参考风格图</p>
-                    <p className="mt-0.5 text-[9px] text-zinc-600">提取配色、材质、家具语言与灯光氛围</p>
+                    <p className="text-[11px] font-semibold text-stone-800">参考风格图</p>
+                    <p className="mt-0.5 text-[9px] text-stone-400">提取配色、材质、家具语言与灯光氛围</p>
                   </div>
-                  <span className="rounded-full bg-zinc-800 px-2 py-1 text-[8px] font-semibold text-zinc-500">可选</span>
+                  <span className="rounded-full bg-stone-100 px-2 py-1 text-[8px] font-semibold text-stone-500">可选</span>
                 </div>
                 <ImageUploader
                   label="上传参考风格图"
@@ -221,8 +221,8 @@ function AppInner() {
                 className={cn(
                   "flex w-full items-center justify-center gap-2.5 rounded-2xl py-4 text-sm font-bold transition-all duration-300",
                   !rawUpload.image || generation.isGenerating
-                    ? "cursor-not-allowed bg-zinc-800 text-zinc-600"
-                    : "bg-[#d9ff57] text-zinc-950 shadow-[0_12px_40px_rgba(217,255,87,0.12)] hover:bg-[#e3ff7d] active:scale-[0.98]"
+                    ? "cursor-not-allowed bg-stone-200 text-stone-400"
+                    : "bg-[#c9ef2f] text-[#263000] shadow-[0_12px_34px_rgba(151,181,27,0.18)] hover:bg-[#d4f55a] active:scale-[0.98]"
                 )}
               >
                 {generation.isGenerating ? (
@@ -243,7 +243,7 @@ function AppInner() {
                   type="button"
                   onClick={() => setView("result")}
                   disabled={generation.isGenerating}
-                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900 text-xs font-semibold text-zinc-300 transition hover:border-zinc-600 hover:bg-zinc-800 hover:text-white disabled:cursor-wait"
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white text-xs font-semibold text-stone-700 transition hover:border-stone-300 hover:bg-stone-50 hover:text-stone-950 disabled:cursor-wait"
                 >
                   <Eye className="h-4 w-4" />
                   查看上次生成结果
@@ -251,28 +251,28 @@ function AppInner() {
               )}
 
               {hasApiKey === false && (
-                <div className="flex items-start gap-3 rounded-xl border border-amber-900/50 bg-amber-950/40 p-3">
-                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
-                  <p className="text-[11px] leading-relaxed text-amber-400/90">
+                <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                  <p className="text-[11px] leading-relaxed text-amber-700">
                     服务端未配置 API Key，请在 .env.local 中设置 GEMINI_API_KEY。
                   </p>
                 </div>
               )}
 
               {generation.error && (
-                <div className="flex items-start gap-3 rounded-xl border border-red-900/50 bg-red-950/40 p-3">
-                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
-                  <p className="flex-1 text-[11px] leading-relaxed text-red-300">
+                <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+                  <p className="flex-1 text-[11px] leading-relaxed text-red-700">
                     {generation.error}
                   </p>
-                  <button onClick={generation.clearError} className="text-[10px] text-red-400">
+                  <button onClick={generation.clearError} className="text-[10px] text-red-600">
                     关闭
                   </button>
                 </div>
               )}
 
-              <div className="desktop-editor-help rounded-xl border border-zinc-800 bg-zinc-900/70 p-3">
-                <p className="text-[11px] leading-relaxed text-zinc-500">
+              <div className="desktop-editor-help rounded-xl border border-stone-200 bg-[#f8f7f2] p-3">
+                <p className="text-[11px] leading-relaxed text-stone-500">
                   天花板会保留原始高度和结构，同时强制处理为完整装修面。主方案生成后，可继续输入反馈定向调整或重新设计。
                 </p>
               </div>
