@@ -7,17 +7,17 @@ import {
   cameraValidationPassed,
   formatCameraMovementForLog,
   type CameraViewValidation,
-} from "../src/lib/cameraMovement";
+} from "./lib/cameraMovement";
 import {
   buildCeilingRepairPrompt,
   ceilingCompletionPassed,
   type CeilingCompletionValidation,
-} from "../src/lib/ceilingCompletion";
+} from "./lib/ceilingCompletion";
 import {
   buildDirectionalViewPrompt,
   directionalViewValidationPassed,
   type DirectionalViewValidation,
-} from "../src/lib/directionalView";
+} from "./lib/directionalView";
 import type {
   DesignStyle,
   GenerationMode,
@@ -29,7 +29,7 @@ import type {
   RenovationIntensity,
   RoomType,
   ViewDirection,
-} from "../src/types";
+} from "./types";
 
 // Load environment variables from .env.local
 dotenv.config({ path: ".env.local" });
